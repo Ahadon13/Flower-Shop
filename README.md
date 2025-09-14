@@ -27,4 +27,4 @@ It allows customers to browse flower products, add them to their cart, and place
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/Ahadon13/flower-shop.git
+   git clone https://github.com/Ahadon13/Flower-Shop.git
