@@ -120,7 +120,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
                 <!-- Book Now button -->
                 <?php if (isset($_SESSION['authenticated']) && $_SESSION['authenticated']): ?>
-                <a href="customer_dashboard.php?product=<?= $product['id'] ?>" class="book-btn">Book Now</a>
+                <a href="customer/booking.php?product_id=<?= $product['id'] ?>" class="book-btn">Book Now</a>
                 <?php else: ?>
                 <a href="login.php" class="book-btn">Book Now</a>
                 <?php endif; ?>

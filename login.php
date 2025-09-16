@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['cart'][$row['product_id']] = $row['total_quantity'];
             }
 
-            header("Location: customer/dashboard.php");
+            header("Location: customer/home.php");
             exit();
         } else {
             $error = "Invalid password!";
@@ -63,6 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <title>Login</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
     :root {
         --accent: #4CAF50;
@@ -205,26 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="password" class="sr-only" style="display:none;">Password</label>
                 <input id="password" type="password" name="password" placeholder="Password" required
                     aria-describedby="toggleHelp">
-                <button type="button" id="togglePassword" class="password-toggle" aria-pressed="false"
-                    aria-label="Show password" title="Show password">
-                    <!-- Eye icon (open) -->
-                    <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true">
-                        <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z"
-                            stroke="#333" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                        <circle cx="12" cy="12" r="3" stroke="#333" stroke-width="1.2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                    <!-- Eye-off icon (closed), hidden by default -->
-                    <svg id="eyeClosed" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true" style="display:none;">
-                        <path
-                            d="M17.94 17.94C16.11 19.12 14.12 19.8 12 19.8c-5 0-9.27-3.11-11-7 1.03-2.3 2.66-4.2 4.64-5.5"
-                            stroke="#333" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M1 1l22 22" stroke="#333" stroke-width="1.2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </button>
+                <i class="fas fa-eye password-toggle" id="togglePassword"
+                    onclick="togglePasswordVisibility('password', 'togglePassword')"></i>
             </div>
 
             <?php if (!empty($error)): ?>
@@ -241,39 +225,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-    (function() {
-        const pwd = document.getElementById('password');
-        const toggle = document.getElementById('togglePassword');
-        const eyeOpen = document.getElementById('eyeOpen');
-        const eyeClosed = document.getElementById('eyeClosed');
+    function togglePasswordVisibility(inputId, toggleId) {
+        const passwordInput = document.getElementById(inputId);
+        const toggleIcon = document.getElementById(toggleId);
 
-        toggle.addEventListener('click', () => {
-            const isHidden = pwd.type === 'password';
-            if (isHidden) {
-                pwd.type = 'text';
-                toggle.setAttribute('aria-pressed', 'true');
-                toggle.setAttribute('aria-label', 'Hide password');
-                toggle.title = 'Hide password';
-                eyeOpen.style.display = 'none';
-                eyeClosed.style.display = 'block';
-            } else {
-                pwd.type = 'password';
-                toggle.setAttribute('aria-pressed', 'false');
-                toggle.setAttribute('aria-label', 'Show password');
-                toggle.title = 'Show password';
-                eyeOpen.style.display = 'block';
-                eyeClosed.style.display = 'none';
-            }
-        });
-
-        // Optional: allow toggling with Enter/Space when focused
-        toggle.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggle.click();
-            }
-        });
-    })();
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
     </script>
 </body>
 

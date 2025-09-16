@@ -43,7 +43,7 @@ if (empty($products)) {
             icon: 'error',
             confirmButtonText: 'OK'
         }).then(() => {
-            window.location.href = 'dashboard.php';
+            window.location.href = 'home.php';
         });
     </script>";
     exit;
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    window.location.href = 'dashboard.php';
+                    window.location.href = 'home.php';
                 });
             </script>";
         } else {
@@ -257,6 +257,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <button type="submit" class="checkout-btn">Place Order</button>
+        <a href="flower_gallery.php" class="checkout-btn"
+            style="background-color: #dc3545; text-decoration: none; display: inline-block; text-align: center; margin-top: 10px;">Cancel</a>
     </form>
 </div>
 

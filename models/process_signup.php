@@ -108,11 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_profile'] = $profileImage;
             $_SESSION['authenticated'] = true;
             
-            // Set success message for dashboard
+            // Set success message for home
             $_SESSION['flash_message'] = "Welcome, " . htmlspecialchars($name) . "! Your account has been created successfully and you are now logged in.";
             $_SESSION['flash_type'] = "success";
             
-            header("Location: ../customer/dashboard.php");
+            header("Location: ../customer/home.php");
             exit;
         } else {
             $_SESSION['flash_message'] = "An error occurred while creating your account. Please try again.";

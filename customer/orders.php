@@ -226,7 +226,8 @@ $fulfillmentMethods = ['pickup', 'delivery'];
         <p><?= !empty($search_query) || !empty($date_from) || !empty($date_to) || !empty($payment_method) || !empty($fulfillment_method) ? 'No orders match your search criteria. Try adjusting your filters.' : 'You havent placed any orders yet.' ?>
         </p>
         <?php if (empty($search_query) && empty($date_from) && empty($date_to) && empty($payment_method) && empty($fulfillment_method)): ?>
-        <a href="index.php" style="color: #27ae60; text-decoration: none; font-weight: bold;">Start Shopping</a>
+        <a href="flower_gallery.php" style="color: #27ae60; text-decoration: none; font-weight: bold;">Start
+            Shopping</a>
         <?php else: ?>
         <a href="?" style="color: #27ae60; text-decoration: none; font-weight: bold;">View All Orders</a>
         <?php endif; ?>

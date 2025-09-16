@@ -927,6 +927,16 @@ nav a:hover {
 
 /* Customer Orders Details Page */
 
+.payment-gcash {
+    background: #007bff;
+    color: white;
+}
+
+.payment-cash {
+    background: #28a745;
+    color: white;
+}
+
 .customer-orders-details-orders-container {
     padding: 20px;
     max-width: 1200px;

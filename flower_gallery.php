@@ -1,80 +1,84 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+include 'includes/header.php';
+include 'includes/db.php';
+include 'models/cart_item.php';
 
-<!DOCTYPE html>
-<html lang="en">
+$is_logged_in = isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
 
-<head>
-    <meta charset="UTF-8">
-    <title>Bulaklakan ni Jay - Book Events</title>
-    <link rel="stylesheet" href="flower_gallery.css">
-    <style>
-    .category-section {
-        text-align: center;
-        margin: 30px 0;
-    }
+$cart = new CartItem($conn);
 
-    .category-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        margin: 20px auto;
-        max-width: 1000px;
-    }
+// Category filter
+$categories = ["Valentine", "Birthday", "Wedding", "Funeral"];
+$current_category = $_GET['category'] ?? "All";
 
-    .category-card {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        text-align: center;
-        transition: transform 0.2s ease;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-    }
+// Count total records
+$count_sql = "SELECT COUNT(*) as total FROM products WHERE quantity > 0";
+if ($current_category !== "All") {
+    $count_sql .= " AND occasion = '" . $conn->real_escape_string($current_category) . "'";
+}
+$count_result = $conn->query($count_sql);
+$totalRecords = $count_result->fetch_assoc()['total'];
 
-    .category-card:hover {
-        transform: scale(1.05);
-    }
+// Fetch products with LIMIT
+$sql = "SELECT * FROM products WHERE quantity > 0";
+if ($current_category !== "All") {
+    $sql .= " AND occasion = '" . $conn->real_escape_string($current_category) . "'";
+}
+$result = $conn->query($sql);
+?>
 
-    .category-card img {
-        width: auto;
-        height: 250px;
-        object-fit: cover;
-        object-position: center;
-    }
+<div class="page-container">
 
-    .category-card h2 {
-        margin: 12px 0;
-        color: #333;
-    }
-    </style>
-</head>
-
-<body>
-    <div class="category-section">
-        <h1>Book Events</h1>
-        <div class="category-grid">
-            <a href="valentines.php" class="category-card">
-                <img src="Media/valentine_roses-removebg-preview.png" alt="Valentines">
-                <h2>Valentines</h2>
-            </a>
-            <a href="wedding.php" class="category-card">
-                <img src="Media/wedding_flower-removebg-preview.png" alt="Wedding">
-                <h2>Wedding</h2>
-            </a>
-            <a href="funeral.php" class="category-card">
-                <img src="Media/funeral_flowers4-removebg-preview.png" alt="Funeral">
-                <h2>Funeral</h2>
-            </a>
-            <a href="birthday.php" class="category-card">
-                <img src="Media/Bulaklakan-Carnation-removebg-preview.png" alt="Birthday">
-                <h2>Birthday</h2>
-            </a>
-        </div>
+    <!-- Category navigation -->
+    <div class="category-nav">
+        <a href="?category=All" class="<?= ($current_category == 'All' ? 'active' : '') ?>">All</a>
+        <?php foreach ($categories as $cat): ?>
+        <a href="?category=<?= $cat ?>" class="<?= ($current_category == $cat ? 'active' : '') ?>"><?= $cat ?></a>
+        <?php endforeach; ?>
     </div>
-</body>
 
-</html>
+    <!-- Products -->
+    <div class="gallery-container">
+        <?php if ($result->num_rows == 0): ?>
+        <div class="no-products-message" style="text-align:center; color: #666; grid-column: 1 / -1; padding: 20px;">
+            <p>No products found in this category. Please check back later or try another category.</p>
+        </div>
+        <?php else: ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="gallery-item">
+            <img src="../uploads/<?= $row['image'] ?>" alt="<?= $row['name'] ?>" class="product-image">
+            <h3 class="product-name"><?= $row['name'] ?></h3>
+            <p class="product-description"><?= $row['description'] ?></p>
+            <p class="product-price">₱<?= number_format($row['price'], 2) ?></p>
+            <p class="product-quantity">In stock: <?= $row['quantity'] ?></p>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+                <?php if ($is_logged_in): ?>
+                <button class="add-to-cart-btn" data-id="<?= $row['id'] ?>" data-name="<?= $row['name'] ?>"
+                    data-image="../uploads/<?= $row['image'] ?>" data-stock="<?= $row['quantity'] ?>"
+                    data-price="<?= number_format($row['price'], 2) ?>"
+                    style="padding: 8px 12px; border-radius: 4px; text-align: center; text-decoration: none; cursor: pointer; flex: 1; white-space: nowrap;">
+                    Add to Cart
+                </button>
+                <button class="place-order-btn" data-id="<?= $row['id'] ?>" data-name="<?= $row['name'] ?>"
+                    data-image="../uploads/<?= $row['image'] ?>" data-stock="<?= $row['quantity'] ?>"
+                    data-price="<?= $row['price'] ?>"
+                    style="padding: 8px 12px; border-radius: 4px; text-align: center; text-decoration: none; cursor: pointer; flex: 1; white-space: nowrap;">
+                    Order
+                </button>
+                <?php else: ?>
+                <a href="login.php" class="add-to-cart-btn">
+                    Login to Add to Cart
+                </a>
+                <a href="login.php" class="place-order-btn">
+                    Login to Order
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endwhile; ?>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php include 'includes/footer.php'; ?>
